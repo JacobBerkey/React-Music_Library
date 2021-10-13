@@ -1,75 +1,62 @@
-import React, { Component } from 'react'
-import axios from "axios";
+import React, { Component } from 'react';
+import axios from 'axios'
 
-
-class SongForm extends Component {
-
+class SongCreateForm extends Component {
     constructor(props) {
         super(props);
-        this.state = { 
-            title:'',
-            artist:'',
-            album:'',
-            release_date:'',
-            genre:''
-         }
-    }
-
-    handleChange = (event) => {
+    
+        this.state = {
+          title : "",
+          album : "",
+          artist : "",
+          genre : "",
+          release_date : "",
+        };
+      }
+      
+      handleChange = (event) => {
         this.setState({
             [event.target.name]: event.target.value
-        });
-    }
-
-    handleSubmit = (event) => {
-        event.preventDefault();
-        const song = {
-            title: this.state.title,
-            artist: this.state.artist,
-            album: this.state.album,
-            genre: this.state.genre,
-            release_date: this.state.release_date
-        }
-        axios
-        .post('http://127.0.0.1:8000/music/', song)
-        .then(response => {
-            console.log(response);
-            this.clearState();
-            this.props.createSongCallback(response.data);
-            return response;
-      })
-        .catch(error => console.log(error));
-    };
-
-    clearState = () => {
-        this.setState({
-          title: '',
-          artist: '',
-          album: '',
-          genre: '',
-          release_date: '',
-        });
-      }
-
     
-    render() {
-        return(
-            <form onSubmit={this.handleSubmit}>
-                <label>Title</label>
-                <input name='title' onChange={this.handleChange} value={this.state.title}/>
-                <label>Artist</label>
-                <input name='artist' onChange={this.handleChange} value={this.state.artist}/>
-                <label>Album</label>
-                <input name='album' onChange={this.handleChange} value={this.state.album}/>
-                <label>Genre</label>
-                <input name='genre' onChange={this.handleChange} value={this.state.genre}/>
-                <label>Release Date</label>
-                <input name='release_date' onChange={this.handleChange} value={this.state.release_date}/>
-                <button type="submit">Create Song</button>
-
-            </form>
-        )
+        });
+    
+      }
+    
+      createSong = async (newSong) => {
+        let response = await axios.post('http://127.0.0.1:8000/music/', newSong)
+        this.getAllSongs(); 
+        return response.status; 
+         
     }
-}
- 
-export default SongForm;
+    
+      createSubmit = (event) => {
+        event.preventDefault();
+        this.props.createASong(this.state);
+      };
+    
+      render() {
+        return (
+          <div>
+      
+                
+                <form onSubmit={this.createSubmit}>
+                <table>
+                <tr>
+                <td>Add a song:</td>
+                <td><input name="title" onChange={this.handleChange} value={this.state.title}/></td>
+                <td><input name="album" onChange={this.handleChange} value={this.state.album}/></td>
+                <td><input name="artist" onChange={this.handleChange} value={this.state.artist}/></td>
+                <td><input name="genre" onChange={this.handleChange} value={this.state.genre}/></td>
+                <td><input name="release_date" onChange={this.handleChange} value={this.state.release_date}/></td>
+                <td>
+                  <button type="submit">Create</button>
+                </td>
+                </tr>
+                </table>
+                </form>
+          </div>
+        );
+      }
+    }
+   
+  export default SongCreateForm;

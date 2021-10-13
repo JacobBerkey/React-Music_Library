@@ -26,10 +26,11 @@ class AllSongs extends Component {
         })
     }
 
-    async deleteSong(songID){
-        let response = await axios.delete('http://127.0.0.1:8000/music/' + songID);
-        console.log(response);
-        window.location.reload();
+    deleteSong = async (songid) => {
+        let response = await axios.delete('http://127.0.0.1:8000/music/' + songid + '/')
+        this.getAllSongs(); 
+        return response.status; 
+         
     }
 
     render() { 
@@ -44,7 +45,7 @@ class AllSongs extends Component {
                     <th scope="col">Album</th>
                     <th scope="col">Release Date</th>
                     <th scope="col">Genre</th>
-                    <th scope="col">Delete Song</th>
+                    <th scope="col">Update </th>
                     </tr>
                 </thead>
                 {this.state.songs.map((song)=>{
